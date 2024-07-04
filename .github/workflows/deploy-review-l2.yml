@@ -17,13 +17,19 @@ jobs:
           id: output
           run: echo "REF_SLUG=${{ env.GITHUB_REF_NAME_SLUG }}" >> $GITHUB_OUTPUT
 
-  publish_image:
-    name: Publish Docker image
-    needs: make_slug
-    uses: './.github/workflows/publish-image.yml'
-    with:
-        tags: ghcr.io/blockscout/frontend:review-${{ needs.make_slug.outputs.REF_SLUG }}
-    secrets: inherit
+publish_image:
+  name: Publish Docker image
+  needs: make_slug
+
+  steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2  
+
+    - name: Run publish-image workflow
+      uses: ./.github/workflows/publish-image.yml@main  
+      with:
+        tags: ghcr.io/blockscout/frontend:review-${{ needs.make_slug.outputs.REF_SL
+
 
   deploy_review_l2:
     name: Deploy frontend (L2)
